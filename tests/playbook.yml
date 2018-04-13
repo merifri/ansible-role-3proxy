@@ -1,0 +1,7 @@
+---
+- hosts: cimon-ansible
+  roles:
+    - role: ansible-role-3proxy
+      proxy_users:
+      - name: test
+        password: pAsswOrd

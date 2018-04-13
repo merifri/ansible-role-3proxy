@@ -1,0 +1,81 @@
+---
+- name: "create group"
+  group:
+    name: "u3proxy"
+    system: yes
+  tags: proxy
+
+- name: "create user"
+  user:
+    name: "u3proxy"
+    group: "u3proxy"
+    system: yes
+    create_home: no
+  tags: proxy
+
+- name: "get uid"
+  command: "id -u u3proxy"
+  register: proxy_user_uid
+  tags: proxy
+
+- name: "get gid"
+  command: "id -g u3proxy"
+  register: proxy_user_gid
+  tags: proxy
+
+- name: "create dirs"
+  file:
+    path: "{{ item }}"
+    mode: 0750
+    owner: "u3proxy"
+    group: "u3proxy"
+    state: directory
+  with_items:
+    - "{{ proxy_config_path }}"
+  tags: proxy
+
+- name: "get source"
+  get_url:
+    url: "{{ proxy_source }}"
+    dest: "/tmp/3proxy.tar.gz"
+  tags: proxy
+
+- name: "install dependencies"
+  apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+    cache_valid_time: "{{ apt_cache_valid_time }}"
+  with_items:
+    - "{{ proxy_dependencies }}"
+  tags: proxy
+
+- name: "extract archive"
+  unarchive:
+    src: "/tmp/3proxy.tar.gz"
+    dest: "/usr/local/src/"
+    copy: no
+    creates: "{{ proxy_source_path }}"
+  tags: proxy
+
+- name: "build"
+  command: "make -j{{ ansible_processor_cores|default(1) }} -f Makefile.Linux"
+  args:
+    chdir: "{{ proxy_source_path }}"
+  tags: proxy
+
+- name: "add binaries to /usr/bin"
+  file:
+    src: "{{ proxy_source_path }}/src/3proxy"
+    dest: "/usr/bin/3proxy"
+    state: link
+  tags: proxy
+
+- name: "upload config"
+  template:
+    src: "3proxy.cfg.j2"
+    dest: "{{ proxy_config_path }}/3proxy.cfg"
+    mode: 0600
+    owner: u3proxy
+    group: u3proxy
+  tags: proxy

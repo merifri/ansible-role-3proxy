@@ -1,0 +1,20 @@
+daemon
+
+setuid {{ proxy_user_uid.stdout }}
+setgid {{ proxy_user_gid.stdout }}
+
+log /dev/null
+
+allow *
+
+auth strong
+{% for e in proxy_users %}
+users {{ e.name }}:CL:{{ e.password }}
+{% endfor %}
+
+nserver 8.8.8.8
+nserver 77.88.8.8
+
+nscache 65536
+
+socks -p{{ proxy_socks_port }}
