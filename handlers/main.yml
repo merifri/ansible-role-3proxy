@@ -1,0 +1,7 @@
+---
+- name: "restart proxy"
+  systemd:
+    enabled: true
+    name: 3proxy.service
+    state: restarted
+  tags: proxy
