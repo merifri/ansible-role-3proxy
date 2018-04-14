@@ -31,9 +31,3 @@ proxy_http: False
 proxy_http_port: 3128
 proxy_http_options: ""
 
-#####
-
-proxy_dependencies:
-- build-essential
-- tar
-- gzip
