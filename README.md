@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/merifri/ansible-role-3proxy.svg?branch=master)](https://travis-ci.org/merifri/ansible-role-3proxy)
+
 3proxy Ansible Role
 =========
 
