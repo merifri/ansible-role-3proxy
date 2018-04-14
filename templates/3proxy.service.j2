@@ -4,9 +4,9 @@ After=syslog.target
 
 [Service]
 Type=forking
-User=u3proxy
-Group=u3proxy
-ExecStart=/usr/bin/3proxy {{ proxy_config_path }}/3proxy.cfg
+User={{ proxy_system_user }}
+Group={{ proxy_system_user }}
+ExecStart=/usr/bin/3proxy {{ proxy_config_path }}/{{ proxy_service_name }}.cfg
 
 [Install]
 WantedBy=multi-user.target

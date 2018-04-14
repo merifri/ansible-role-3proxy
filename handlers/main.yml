@@ -1,7 +1,6 @@
 ---
 - name: "restart proxy"
   systemd:
-    enabled: true
-    name: 3proxy.service
+    name: "{{ proxy_service_name }}.service"
     state: restarted
   tags: proxy

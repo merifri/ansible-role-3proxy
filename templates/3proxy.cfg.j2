@@ -1,20 +1,37 @@
-daemon
+{% if proxy_daemon %}daemon{% endif %}
 
 setuid {{ proxy_user_uid.stdout }}
 setgid {{ proxy_user_gid.stdout }}
 
-log /dev/null
+log {{ proxy_log }}
 
-allow *
+{% if proxy_allow | length > 0 %}
+allow {{ proxy_allow }}
+{% endif %}
+{% if proxy_deny | length > 0 %}
+deny {{ proxy_deny }}
+{% endif %}
 
-auth strong
+maxconn {{ proxy_maxconn }}
+
+auth {{ proxy_auth }}
 {% for e in proxy_users %}
-users {{ e.name }}:CL:{{ e.password }}
+users "{{ e.name }}:{{ e.type | default('CL') }}:{{ e.password }}"
 {% endfor %}
 
-nserver 8.8.8.8
-nserver 77.88.8.8
+{% for e in proxy_nserver %}
+nserver {{ e | ipv4 }}
+{% endfor %}
+{% for e in proxy_nserver6 %}
+nserver {{ e | ipv6 }}
+{% endfor %}
 
-nscache 65536
+nscache {{ proxy_nscache }}
 
-socks -p{{ proxy_socks_port }}
+{% if proxy_socks %}
+socks -p{{ proxy_socks_port }} {{ proxy_socks_options }}
+{% endif %}
+
+{% if proxy_http %}
+proxy -p{{ proxy_http_port }} {{ proxy_http_options }}
+{% endif %}

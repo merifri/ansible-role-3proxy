@@ -1,25 +1,25 @@
 ---
 - name: "create group"
   group:
-    name: "u3proxy"
+    name: "{{ proxy_system_user }}"
     system: yes
   tags: proxy
 
 - name: "create user"
   user:
-    name: "u3proxy"
-    group: "u3proxy"
+    name: "{{ proxy_system_user }}"
+    group: "{{ proxy_system_user }}"
     system: yes
     create_home: no
   tags: proxy
 
 - name: "get uid"
-  command: "id -u u3proxy"
+  command: "id -u {{ proxy_system_user }}"
   register: proxy_user_uid
   tags: proxy
 
 - name: "get gid"
-  command: "id -g u3proxy"
+  command: "id -g {{ proxy_system_user }}"
   register: proxy_user_gid
   tags: proxy
 
@@ -27,8 +27,8 @@
   file:
     path: "{{ item }}"
     mode: 0750
-    owner: "u3proxy"
-    group: "u3proxy"
+    owner: "{{ proxy_system_user }}"
+    group: "{{ proxy_system_user }}"
     state: directory
   with_items:
     - "{{ proxy_config_path }}"
@@ -37,7 +37,7 @@
 - name: "get source"
   get_url:
     url: "{{ proxy_source }}"
-    dest: "/tmp/3proxy.tar.gz"
+    dest: "/tmp/3proxy-{{ proxy_version }}.tar.gz"
   tags: proxy
 
 - name: "install dependencies"
@@ -52,7 +52,7 @@
 
 - name: "extract archive"
   unarchive:
-    src: "/tmp/3proxy.tar.gz"
+    src: "/tmp/3proxy-{{ proxy_version }}.tar.gz"
     dest: "/usr/local/src/"
     copy: no
     creates: "{{ proxy_source_path }}"
@@ -75,19 +75,25 @@
 - name: "upload config"
   template:
     src: "3proxy.cfg.j2"
-    dest: "{{ proxy_config_path }}/3proxy.cfg"
+    dest: "{{ proxy_config_path }}/{{ proxy_service_name }}.cfg"
     mode: 0600
-    owner: u3proxy
-    group: u3proxy
+    owner: "{{ proxy_system_user }}"
+    group: "{{ proxy_system_user }}"
   notify: restart proxy
   tags: proxy
 
 - name: "upload systemd service"
   template:
     src: "3proxy.service.j2"
-    dest: "/etc/systemd/system/3proxy.service"
+    dest: "/etc/systemd/system/{{ proxy_service_name }}.service"
     mode: 0644
     owner: root
     group: root
   notify: restart proxy
+  tags: proxy
+
+- name: "enable proxy service"
+  systemd:
+    name: "{{ proxy_service_name }}.service"
+    enabled: "{{ proxy_enabled }}"
   tags: proxy

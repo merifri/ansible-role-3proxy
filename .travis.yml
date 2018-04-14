@@ -6,7 +6,6 @@ sudo: required
 
 install:
   - pip install ansible apt
-  - ansible --version
 
 script:
   - echo -ne '[cimon-ansible]\nlocalhost ansible_connection=local ansible_python_interpreter=' > inventory
