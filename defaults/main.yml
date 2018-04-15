@@ -32,3 +32,5 @@ proxy_socks_options: ""
 proxy_http: False
 proxy_http_port: 3128
 proxy_http_options: ""
+
+proxy_limit_nofile: 1024
