@@ -15,7 +15,8 @@ proxy_users: []
 proxy_daemon: True
 
 proxy_enabled: True
-proxy_log: "/dev/null"
+proxy_log: "/var/log/3proxy/proxy.log"
+proxy_log_path: "/var/log/3proxy"
 proxy_logformat: "%Y-%m-%d %H:%M:%S %I %O %U"
 proxy_allow: "*"
 proxy_deny: ""

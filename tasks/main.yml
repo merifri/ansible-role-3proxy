@@ -32,6 +32,7 @@
     state: directory
   with_items:
     - "{{ proxy_config_path }}"
+    - "{{ proxy_log_path }}"
   tags: proxy
 
 - name: "get source"
