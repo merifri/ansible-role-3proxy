@@ -12,10 +12,11 @@ proxy_users: []
 #  password: pass
 
 #####
+proxy_daemon: True
 
 proxy_enabled: True
 proxy_log: "/dev/null"
-proxy_daemon: True
+proxy_logformat: "%Y-%m-%d %H:%M:%S %I %O %U"
 proxy_allow: "*"
 proxy_deny: ""
 proxy_auth: "none"
@@ -30,4 +31,3 @@ proxy_socks_options: ""
 proxy_http: False
 proxy_http_port: 3128
 proxy_http_options: ""
-

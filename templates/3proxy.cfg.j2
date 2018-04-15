@@ -4,6 +4,7 @@ setuid {{ proxy_user_uid.stdout }}
 setgid {{ proxy_user_gid.stdout }}
 
 log {{ proxy_log }}
+logformat "{{ proxy_logformat }}"
 
 {% if proxy_allow | length > 0 %}
 allow {{ proxy_allow }}
@@ -15,9 +16,9 @@ deny {{ proxy_deny }}
 maxconn {{ proxy_maxconn }}
 
 auth {{ proxy_auth }}
-{% for e in proxy_users %}
-users "{{ e.name }}:{{ e.type | default('CL') }}:{{ e.password }}"
-{% endfor %}
+{% if proxy_users | length > 0 %}
+users ${{ proxy_config_path }}/{{ proxy_service_name }}.auth
+{% endif %}
 
 {% for e in proxy_nserver %}
 nserver {{ e | ipv4 }}

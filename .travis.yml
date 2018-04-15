@@ -8,7 +8,6 @@ addons:
   apt:
     packages:
     - python-pip
-    - python-apt
 
 install:
   - pip install ansible

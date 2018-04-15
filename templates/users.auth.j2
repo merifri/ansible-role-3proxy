@@ -1,0 +1,3 @@
+{% for e in proxy_users %}
+"{{ e.name }}:CR:{% if e.type == 'CR' %}{{ e.password }}{% else %}{{ e.password | password_hash('md5') }}{% endif %}"
+{% endfor %}

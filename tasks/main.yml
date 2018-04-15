@@ -82,6 +82,16 @@
   notify: restart proxy
   tags: proxy
 
+- name: "upload users"
+  template:
+    src: "users.auth.j2"
+    dest: "{{ proxy_config_path }}/{{ proxy_service_name }}.auth"
+    mode: 0600
+    owner: "{{ proxy_system_user }}"
+    group: "{{ proxy_system_user }}"
+  notify: restart proxy
+  tags: proxy
+
 - name: "upload systemd service"
   template:
     src: "3proxy.service.j2"

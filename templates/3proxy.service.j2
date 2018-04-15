@@ -7,6 +7,7 @@ Type=forking
 User={{ proxy_system_user }}
 Group={{ proxy_system_user }}
 ExecStart=/usr/bin/3proxy {{ proxy_config_path }}/{{ proxy_service_name }}.cfg
+ExecReload=/bin/kill -USR1 $MAINPID
 
 [Install]
 WantedBy=multi-user.target
