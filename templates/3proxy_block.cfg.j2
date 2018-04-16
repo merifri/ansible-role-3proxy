@@ -1,0 +1,4 @@
+setuid {{ proxy_user_uid.stdout }}
+setgid {{ proxy_user_gid.stdout }}
+
+{{ proxy_config_block }}

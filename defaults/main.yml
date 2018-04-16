@@ -1,22 +1,37 @@
 ---
 proxy_version: "0.8.11"
-proxy_source: "https://github.com/z3APA3A/3proxy/archive/{{ proxy_version }}.tar.gz"
+proxy_repository: "https://github.com/z3APA3A/3proxy.git"
 
 proxy_config_path: "/etc/3proxy"
 proxy_service_name: "3proxy"
 proxy_system_user: "u3proxy"
+
+proxy_config_block: ""
+
+proxy_binaries:
+  - 3proxy
+  - socks
+  - proxy
+  - smtpp
+  - tcppm
+  - udppm
+  - pop3p
+  - ftppr
+  - icqpr
 
 proxy_users: []
 #- name: test
 #  type: CL
 #  password: pass
 
-#####
-proxy_daemon: True
-
-proxy_enabled: True
-proxy_log: "/var/log/3proxy/proxy.log"
+proxy_service_enabled: True
 proxy_log_path: "/var/log/3proxy"
+
+proxy_limit_nofile: 1024
+
+# Template vars
+proxy_daemon: True
+proxy_log: "/var/log/3proxy/proxy.log"
 proxy_logformat: "%Y-%m-%d %H:%M:%S %I %O %U"
 proxy_allow: "*"
 proxy_deny: ""
@@ -26,11 +41,9 @@ proxy_nserver6: []
 proxy_nscache: 65536
 proxy_maxconn: 100
 
-proxy_socks: True
+proxy_socks: False
 proxy_socks_port: 1080
 proxy_socks_options: ""
 proxy_http: False
 proxy_http_port: 3128
 proxy_http_options: ""
-
-proxy_limit_nofile: 1024

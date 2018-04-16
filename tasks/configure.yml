@@ -1,0 +1,30 @@
+---
+- name: "upload config (template)"
+  template:
+    src: "3proxy.cfg.j2"
+    dest: "{{ proxy_config_path }}/{{ proxy_service_name }}.cfg"
+    mode: 0600
+    owner: "{{ proxy_system_user }}"
+    group: "{{ proxy_system_user }}"
+  when: proxy_config_block | length == 0
+  notify: proxy reload
+
+- name: "upload config (block)"
+  template:
+    src: "3proxy_block.cfg.j2"
+    dest: "{{ proxy_config_path }}/{{ proxy_service_name }}.cfg"
+    mode: 0600
+    owner: "{{ proxy_system_user }}"
+    group: "{{ proxy_system_user }}"
+  when: proxy_config_block | length > 0
+  notify: proxy reload
+
+- name: "upload users"
+  template:
+    src: "users.auth.j2"
+    dest: "{{ proxy_config_path }}/{{ proxy_service_name }}.auth"
+    mode: 0600
+    owner: "{{ proxy_system_user }}"
+    group: "{{ proxy_system_user }}"
+  when: proxy_users | length > 0
+  notify: proxy reload

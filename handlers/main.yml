@@ -1,6 +1,14 @@
 ---
-- name: "restart proxy"
+- name: "proxy reload daemon"
+  systemd:
+    daemon_reload: True
+
+- name: "proxy restart"
   systemd:
     name: "{{ proxy_service_name }}.service"
     state: restarted
-  tags: proxy
+
+- name: "proxy reload"
+  systemd:
+    name: "{{ proxy_service_name }}.service"
+    state: reloaded
