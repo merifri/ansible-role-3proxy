@@ -14,7 +14,7 @@ Role Variables
 --------------
 
 ```
-proxy_version: "0.8.11"
+proxy_version: "0.8.12"
 proxy_source: "https://github.com/z3APA3A/3proxy/archive/{{ proxy_version }}.tar.gz"
 
 proxy_config_path: "/etc/3proxy"

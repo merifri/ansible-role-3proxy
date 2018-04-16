@@ -1,5 +1,5 @@
 ---
-- hosts: cimon-ansible
+- hosts: all
   roles:
     - role: ansible-role-3proxy
 #    proxy_config_block: |

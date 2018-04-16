@@ -1,9 +1,3 @@
 ---
 ansible_become: yes
 apt_cache_valid_time: 86400
-
-proxy_source_path: "/usr/local/src/3proxy"
-
-proxy_dependencies:
-- build-essential
-- git
