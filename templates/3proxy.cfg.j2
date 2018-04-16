@@ -24,7 +24,7 @@ users ${{ proxy_config_path }}/{{ proxy_service_name }}.auth
 nserver {{ e | ipv4 }}
 {% endfor %}
 {% for e in proxy_nserver6 %}
-nserver {{ e | ipv6 }}
+nserver6 {{ e | ipv6 }}
 {% endfor %}
 
 nscache {{ proxy_nscache }}

@@ -1,0 +1,79 @@
+---
+- name: "create proxy group"
+  group:
+    name: "{{ proxy_system_user }}"
+    system: yes
+
+- name: "create proxy user"
+  user:
+    name: "{{ proxy_system_user }}"
+    group: "{{ proxy_system_user }}"
+    system: yes
+    create_home: no
+
+- name: "get proxy uid"
+  command: "id -u {{ proxy_system_user }}"
+  changed_when: False
+  register: proxy_user_uid
+
+- name: "get proxy gid"
+  command: "id -g {{ proxy_system_user }}"
+  changed_when: False
+  register: proxy_user_gid
+
+- name: "create dirs"
+  file:
+    path: "{{ item }}"
+    mode: 0750
+    owner: "{{ proxy_system_user }}"
+    group: "{{ proxy_system_user }}"
+    state: directory
+  with_items:
+    - "{{ proxy_config_path }}"
+    - "{{ proxy_log_path }}"
+
+- name: "install dependencies"
+  apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+    cache_valid_time: "{{ apt_cache_valid_time }}"
+  with_items:
+    - "{{ proxy_dependencies }}"
+
+- name: "get source"
+  git:
+    repo: "{{ proxy_repository }}"
+    version: "{{ proxy_version }}"
+    dest: "{{ proxy_source_path }}"
+    force: yes
+  register: source_updated
+
+- name: "build"
+  command: "make -j{{ ansible_processor_cores|default(1) }} -f Makefile.Linux"
+  args:
+    chdir: "{{ proxy_source_path }}"
+  when: source_updated.changed
+  notify: proxy restart
+
+- name: "add binaries to /usr/bin"
+  file:
+    src: "{{ proxy_source_path }}/src/{{ item }}"
+    dest: "/usr/bin/{{ item }}"
+    state: link
+  with_items: "{{ proxy_binaries }}"
+  notify: proxy restart
+
+- name: "upload systemd service"
+  template:
+    src: "3proxy.service.j2"
+    dest: "/etc/systemd/system/{{ proxy_service_name }}.service"
+    mode: 0644
+    owner: root
+    group: root
+  notify: proxy reload daemon
+
+- name: "enable proxy service"
+  systemd:
+    name: "{{ proxy_service_name }}.service"
+    enabled: "{{ proxy_service_enabled }}"
