@@ -21,13 +21,11 @@ users ${{ proxy_config_path }}/{{ proxy_service_name }}.auth
 {% endif %}
 
 {% for e in proxy_nserver %}
-nserver {{ e | ipv4 }}
-{% endfor %}
-{% for e in proxy_nserver6 %}
-nserver6 {{ e | ipv6 }}
+nserver {{ e | ipaddr }}
 {% endfor %}
 
 nscache {{ proxy_nscache }}
+nscache6 {{ proxy_nscache }}
 
 {% if proxy_socks %}
 socks -p{{ proxy_socks_port }} {{ proxy_socks_options }}
