@@ -15,11 +15,13 @@
   command: "id -u {{ proxy_system_user }}"
   changed_when: False
   register: proxy_user_uid
+  tags: [proxy-configure]
 
 - name: "get proxy gid"
   command: "id -g {{ proxy_system_user }}"
   changed_when: False
   register: proxy_user_gid
+  tags: [proxy-configure]
 
 - name: "create dirs"
   file:
