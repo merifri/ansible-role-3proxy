@@ -60,7 +60,7 @@
 
 - name: "add binaries to /usr/bin"
   file:
-    src: "{{ proxy_source_path }}/src/{{ item }}"
+    src: "{{ proxy_source_path }}/bin/{{ item }}"
     dest: "/usr/bin/{{ item }}"
     state: link
   with_items: "{{ proxy_binaries }}"
