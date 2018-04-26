@@ -17,7 +17,6 @@ proxy_binaries:
   - udppm
   - pop3p
   - ftppr
-  - icqpr
 
 proxy_users: []
 #- name: test
