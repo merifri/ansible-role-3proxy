@@ -1,12 +1,13 @@
 ---
-proxy_version: "0.8.11"
+#proxy_version: "0.8.12"
+# oops, not working for stable
+proxy_version: "devel"
+
 proxy_repository: "https://github.com/z3APA3A/3proxy.git"
 
 proxy_config_path: "/etc/3proxy"
 proxy_service_name: "3proxy"
 proxy_system_user: "u3proxy"
-
-proxy_config_block: ""
 
 proxy_binaries:
   - 3proxy
@@ -29,6 +30,11 @@ proxy_log_path: "/var/log/3proxy"
 proxy_limit_nofile: 1024
 
 # Template vars
+proxy_radius: {}
+#  server: ""
+#  password: ""
+#  log: 'radius'
+
 proxy_daemon: True
 proxy_log: "/var/log/3proxy/proxy.log"
 proxy_logformat: "%Y-%m-%d %H:%M:%S %I %O %U"
@@ -40,9 +46,11 @@ proxy_nserver6: []
 proxy_nscache: 65536
 proxy_maxconn: 100
 
-proxy_socks: False
-proxy_socks_port: 1080
-proxy_socks_options: ""
-proxy_http: False
-proxy_http_port: 3128
-proxy_http_options: ""
+proxy_servers: []
+#- { type: "socks", port: 1080, options: "" }
+#- { type: "proxy", port: 3128, options: "" }
+#- { type: "smtpp", port: 25,   options: "" }
+#- { type: "tcppm", port: 3000, options: "" }
+#- { type: "udppm", port: 3000, options: "" }
+#- { type: "pop3p", port: 110,  options: "" }
+#- { type: "ftppr", port: 21,   options: "" }

@@ -1,10 +1,8 @@
 ---
-- hosts: cimon-ansible
+- hosts: all
   roles:
     - role: ansible-role-3proxy
-#    proxy_config_block: |
-#        daemon
-#        log /dev/null
-#        allow *
-#        auth none
-#        proxy -p3128
+      proxy_service_enabled: False
+      proxy_servers:
+      - type: socks
+        port: 1080

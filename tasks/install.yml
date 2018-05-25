@@ -76,6 +76,7 @@
   notify: proxy reload daemon
 
 - name: "enable proxy service"
-  systemd:
-    name: "{{ proxy_service_name }}.service"
-    enabled: "{{ proxy_service_enabled }}"
+  service:
+    name: "{{ proxy_service_name }}"
+    enabled: yes
+  when: proxy_service_enabled

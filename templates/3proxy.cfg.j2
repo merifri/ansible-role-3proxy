@@ -1,10 +1,24 @@
+# {{ ansible_managed }}
+
 {% if proxy_daemon %}daemon{% endif %}
 
 setuid {{ proxy_user_uid.stdout }}
 setgid {{ proxy_user_gid.stdout }}
 
+{% if proxy_radius %}
+radius {{ proxy_radius.password }} {{ proxy_radius.server }}
+auth radius
+log {{ proxy_radius.log | default('radius') }}
+{% else %}
 log {{ proxy_log }}
+{% if proxy_logformat | length > 0 %}
 logformat "{{ proxy_logformat }}"
+{% endif %}
+auth {{ proxy_auth }}
+{% if proxy_users | length > 0 %}
+users ${{ proxy_config_path }}/{{ proxy_service_name }}.auth
+{% endif %}
+{% endif %}
 
 {% if proxy_allow | length > 0 %}
 allow {{ proxy_allow }}
@@ -15,11 +29,6 @@ deny {{ proxy_deny }}
 
 maxconn {{ proxy_maxconn }}
 
-auth {{ proxy_auth }}
-{% if proxy_users | length > 0 %}
-users ${{ proxy_config_path }}/{{ proxy_service_name }}.auth
-{% endif %}
-
 {% for e in proxy_nserver %}
 nserver {{ e | ipaddr }}
 {% endfor %}
@@ -27,10 +36,6 @@ nserver {{ e | ipaddr }}
 nscache {{ proxy_nscache }}
 nscache6 {{ proxy_nscache }}
 
-{% if proxy_socks %}
-socks -p{{ proxy_socks_port }} {{ proxy_socks_options }}
-{% endif %}
-
-{% if proxy_http %}
-proxy -p{{ proxy_http_port }} {{ proxy_http_options }}
-{% endif %}
+{% for s in proxy_servers %}
+{{ s.type }} {% if s.port %}-p{{ s.port }}{% endif %} {{ s.options | default("") }}
+{% endfor %}
