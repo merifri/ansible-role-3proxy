@@ -40,6 +40,9 @@
     state: present
     update_cache: yes
     cache_valid_time: "{{ apt_cache_valid_time }}"
+  retries: "{{ remote_package_retries }}"
+  register: apt_result
+  until: apt_result is succeeded
 
 - name: "get source"
   git:
@@ -56,7 +59,8 @@
   when: source_updated is changed
   notify: proxy restart
 
-- set_fact:
+- name: "set path to binaries"
+  set_fact:
     proxy_binaries_path: "{{ proxy_source_path }}/bin"
   when: proxy_version == "devel"
 
