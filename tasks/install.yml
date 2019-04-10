@@ -9,7 +9,7 @@
     name: "{{ proxy_system_user }}"
     group: "{{ proxy_system_user }}"
     system: yes
-    create_home: no
+    createhome: no
 
 - name: "get proxy uid"
   command: "id -u {{ proxy_system_user }}"
@@ -36,12 +36,13 @@
 
 - name: "install dependencies"
   apt:
-    name: "{{ item }}"
+    name: "{{ proxy_dependencies }}"
     state: present
     update_cache: yes
     cache_valid_time: "{{ apt_cache_valid_time }}"
-  with_items:
-    - "{{ proxy_dependencies }}"
+  retries: "{{ remote_package_retries }}"
+  register: apt_result
+  until: apt_result is succeeded
 
 - name: "get source"
   git:
@@ -55,12 +56,17 @@
   command: "make -j{{ ansible_processor_cores|default(1) }} -f Makefile.Linux"
   args:
     chdir: "{{ proxy_source_path }}"
-  when: source_updated.changed
+  when: source_updated is changed
   notify: proxy restart
+
+- name: "set path to binaries"
+  set_fact:
+    proxy_binaries_path: "{{ proxy_source_path }}/bin"
+  when: proxy_version == "devel"
 
 - name: "add binaries to /usr/bin"
   file:
-    src: "{{ proxy_source_path }}/bin/{{ item }}"
+    src: "{{ proxy_binaries_path }}/{{ item }}"
     dest: "/usr/bin/{{ item }}"
     state: link
   with_items: "{{ proxy_binaries }}"
@@ -79,3 +85,4 @@
   systemd:
     name: "{{ proxy_service_name }}.service"
     enabled: "{{ proxy_service_enabled }}"
+  when: ansible_service_mgr == "systemd"

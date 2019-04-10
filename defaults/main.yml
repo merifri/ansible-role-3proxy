@@ -1,6 +1,10 @@
 ---
-proxy_version: "0.8.11"
+proxy_version: "0.8.12"
 proxy_repository: "https://github.com/z3APA3A/3proxy.git"
+
+proxy_source_path: "/usr/local/src/3proxy"
+proxy_binaries_path: "{{ proxy_source_path }}/src"
+proxy_dependencies: ["gcc", "git"]
 
 proxy_config_path: "/etc/3proxy"
 proxy_service_name: "3proxy"

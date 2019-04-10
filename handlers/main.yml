@@ -2,13 +2,16 @@
 - name: "proxy reload daemon"
   systemd:
     daemon_reload: True
+  when: ansible_service_mgr == "systemd"
 
 - name: "proxy restart"
   systemd:
     name: "{{ proxy_service_name }}.service"
     state: restarted
+  when: ansible_service_mgr == "systemd"
 
 - name: "proxy reload"
   systemd:
     name: "{{ proxy_service_name }}.service"
     state: reloaded
+  when: ansible_service_mgr == "systemd"
