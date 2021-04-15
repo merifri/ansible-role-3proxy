@@ -59,11 +59,6 @@
   when: source_updated is changed
   notify: proxy restart
 
-- name: "set path to binaries"
-  set_fact:
-    proxy_binaries_path: "{{ proxy_source_path }}/bin"
-  when: proxy_version == "devel"
-
 - name: "add binaries to /usr/bin"
   file:
     src: "{{ proxy_binaries_path }}/{{ item }}"

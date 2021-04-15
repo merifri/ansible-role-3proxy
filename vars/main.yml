@@ -2,3 +2,5 @@
 ansible_become: yes
 apt_cache_valid_time: 86400
 remote_package_retries: 5
+
+ansible_shell_allow_world_readable_temp: True
